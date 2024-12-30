@@ -20,21 +20,7 @@ app.use(express.static("storage"));
 
 app.use(logger);
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        const allowedOrigins = ['https://kitchenary-seven.vercel.app', 'http://localhost:3000'];
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization','Access-Control-Allow-Origin'],
-    credentials: true
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json())
 
