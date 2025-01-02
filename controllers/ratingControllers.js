@@ -59,7 +59,7 @@ const getRatingsByRecipeId = asyncHandler(async (req, res) => {
   const { recipeId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-    return res.status(400).json({ error: "Invalid product ID!" });
+    return res.status(400).json({ error: "Invalid recipe ID!" });
   }
 
   const ratings = await Rating.find({ recipe_id: recipeId });
@@ -72,13 +72,13 @@ const getAverageRatingByRecipeId = asyncHandler(async (req, res) => {
   const { recipeId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-    return res.status(400).json({ error: "Invalid product ID!" });
+    return res.status(400).json({ error: "Invalid recipe ID!" });
   }
 
-  const ratings = await Rating.find({ product_id: recipeId });
+  const ratings = await Rating.find({ recipe_id: recipeId });
 
   if (ratings.length === 0) {
-    return res.status(404).json({ error: "No ratings found for the product!" });
+    return res.status(404).json({ error: "No ratings found for the recipe!" });
   }
 
   const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);
