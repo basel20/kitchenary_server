@@ -62,7 +62,8 @@ const getRatingsByRecipeId = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "Invalid recipe ID!" });
   }
 
-  const ratings = await Rating.find({ recipe_id: recipeId });
+  const ratings = await Rating.find({ recipe_id: recipeId })
+    .populate({ path: "userId" });
 
   res.status(200).json(ratings);
 });
