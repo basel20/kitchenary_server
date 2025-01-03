@@ -104,42 +104,38 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 // Updating user and adding image
-// const updateUserInfo = asyncHandler(async (req, res) => {
-//   const { firstName, lastName, phone, location, birthday, description } =
-//     req.body;
-//   // console.log(req.body)
+const updateUserInfo = asyncHandler(async (req, res) => {
+  const { name , bio} =
+    req.body;
+  // console.log(req.body)
 
-//   const profileImage = req.file ? req.file.filename : null;
+  const profileImage = req.file ? req.file.filename : null;
 
-//   const userId = req.user.id;
-//   // console.log(userId)
+  const userId = req.user.id;
+  // console.log(userId)
 
-//   try {
-//     const user = await User.findById(userId);
+  try {
+    const user = await User.findById(userId);
 
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-//     user.firstName = firstName || user.firstName;
-//     user.lastName = lastName || user.lastName;
-//     user.phone = phone || user.phone;
-//     user.location = location || user.location;
-//     user.birthday = birthday || user.birthday;
-//     user.description = description || user.description;
+    user.name = name || user.name;
+    user.bio = bio || user.bio;
 
-//     if (profileImage) {
-//       user.image = profileImage;
-//     }
-//     await user.save();
-//     res
-//       .status(200)
-//       .json({ message: "User information updated successfully", user });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// });
+    if (profileImage) {
+      user.image = profileImage;
+    }
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "User information updated successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
 // // Update password
 // const updatePassword = asyncHandler(async (req, res) => {
@@ -265,8 +261,8 @@ module.exports = {
   registerUser,
   login,
   logout,
-  verifyEmail
-//   updateUserInfo,
+  verifyEmail,
+  updateUserInfo
 //   updatePassword,
 //   verifyEmailToken,
 //   resetPassword,
