@@ -8,6 +8,7 @@ const User = new mongoose.Schema({
     image: {type: String, required: false},
     isVerified: {type: Boolean, required: true},
     verificationToken: { type: String },
+    bio: {type: String, required: false},
 })
 
 const UserSchema = mongoose.model('User', User)
