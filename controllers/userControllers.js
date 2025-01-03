@@ -4,6 +4,7 @@ const User = require("../db/models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const nodemailer = require('nodemailer');
 //const nodemailer = require("nodemailer");
 
 // Login
@@ -29,8 +30,7 @@ const login = asyncHandler(async (req, res) => {
 
 // Register
 const registerUser = asyncHandler(async (req, res) => {
-  const { name , email,  password } =
-    req.body;
+  const { name, email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -39,15 +39,58 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const verificationToken = crypto.randomBytes(32).toString('hex');
+
   const newUser = new User({
     name,
-    email,  
+    email,
     password: hashedPassword,
+    isVerified: false, // Add an `isVerified` field in the user schema
+    verificationToken,
   });
 
   await newUser.save();
-  res.status(201).json({ message: "User registered successfully" });
+
+  // Send email
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'baselalfaisali@gmail.com',
+      pass: 'yqez gqgs vwuw uztb',
+    },
+  });
+
+  const verificationUrl = `http://89.116.22.108:5000/api/users/verify/${verificationToken}`;
+
+  const mailOptions = {
+    from: 'baselalfaisali@gmail.com',
+    to: email,
+    subject: 'Email Verification',
+    html: `<p>Click the link below to verify your email:</p>
+           <a href="${verificationUrl}">Verify Email</a>`,
+  };
+
+  await transporter.sendMail(mailOptions);
+
+  res.status(201).json({ message: "User registered successfully. Please verify your email." });
 });
+
+// Verify Email
+const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+
+  const user = await User.findOne({ verificationToken: token });
+  if (!user) {
+    return res.status(400).json({ message: "Invalid or expired token" });
+  }
+
+  user.isVerified = true;
+  user.verificationToken = undefined; // Clear the token after verification
+  await user.save();
+
+  res.status(200).json({ message: "Email verified successfully" });
+});
+
 
 // Logout -- just for checking the auth middleware
 const logout = asyncHandler(async (req, res) => {
@@ -218,6 +261,7 @@ module.exports = {
   registerUser,
   login,
   logout,
+  verifyEmail
 //   updateUserInfo,
 //   updatePassword,
 //   verifyEmailToken,
