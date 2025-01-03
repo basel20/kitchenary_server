@@ -14,7 +14,8 @@ const {
     // resetPassword,
   } = require("../controllers/userControllers");
 
-  const { userAuth } = require("../middleware/userAuth");
+const upload = require("../config/storageConfig");  
+const { userAuth } = require("../middleware/userAuth");
 
 router.post("/login", login);
 router.post("/register", registerUser);
