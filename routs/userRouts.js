@@ -20,6 +20,6 @@ router.post("/login", login);
 router.post("/register", registerUser);
 router.post("/logout", userAuth, logout);
 router.get('/verify/:token', verifyEmail);
-router.patch('/update', userAuth, updateUserInfo);
+router.patch('/update', userAuth,upload.single("image"), updateUserInfo);
 
 module.exports = router;
