@@ -16,6 +16,10 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "User does not exist" });
   }
 
+   if (!user.isVerified) {
+    return res.status(403).json({ message: "Email is not verified. Please verify your email to log in." });
+  }
+  
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return res.status(401).json({ message: "Invalid password" });
