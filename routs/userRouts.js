@@ -6,6 +6,7 @@ const {
     registerUser,
     login,
     logout,
+    verifyEmail
     // updateUserInfo,
     // // getAllUsers,
     // updatePassword,
@@ -18,5 +19,6 @@ const {
 router.post("/login", login);
 router.post("/register", registerUser);
 router.post("/logout", userAuth, logout);
+router.get('/verify/:token', verifyEmail);
 
 module.exports = router;
